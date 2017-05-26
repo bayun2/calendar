@@ -6,7 +6,8 @@ class MonthCalendar extends React.Component {
   handleSwipe = idx => {
     this.props.handleSwipe(idx);
   }
-  selectTime = time => {
+  selectTime = (isCur, time) => {
+    if (!isCur) return false;
     this.props.selectTime(time);
   }
   render() {
@@ -43,7 +44,8 @@ class MonthCalendar extends React.Component {
                     ${(`${selectedYear}${selectedMonth}${item.val}` === selectedTime) ?
                      'active' : ''}`}
                   key={idx}
-                  onClick={this.selectTime.bind(this, `${selectedYear}${selectedMonth}${item.val}`)}
+                  onClick={this.selectTime.bind(this, item.type === 'cur',
+                  `${selectedYear}${selectedMonth}${item.val}`)}
                 >
                   <div>{item.val}</div>
                 </div>
