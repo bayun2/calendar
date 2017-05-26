@@ -35,14 +35,14 @@ gulp.task('checkVersion', cb => {
 });
 
 gulp.task('build', ['clean'],() => {
-  wpConfig.devtool = 'source-map'
-  // wpConfig.plugins.push(
-  //   new webpack.optimize.UglifyJsPlugin({
-  //     compressor: {
-  //       warnings: false
-  //     }
-  //   })
-  // )
+  wpConfig.devtool = 'source-map';
+  wpConfig.plugins.push(
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        warnings: false
+      }
+    })
+  );
   return gulp.src('./src/**/*.js')
     .pipe(gulpWebpack(wpConfig, webpack))
     .pipe(gulp.dest('dist'));
@@ -75,7 +75,6 @@ gulp.task('dev', cb => {
     new webpack.NamedModulesPlugin()
   );
   const compiler = webpack(wpConfig);
-  console.log(wpConfig)
   app.use(require('webpack-dev-middleware')(compiler, {
     noInfo: true,
     publicPath: wpConfig.output.publicPath

@@ -1,6 +1,7 @@
 import styles from './index.less';
 import React from 'react';
 import MonthCalendar from './MonthCalendar';
+import WeekCalendar from './WeekCalendar';
 
 class Calendar extends React.Component {
   constructor(props) {
@@ -13,8 +14,10 @@ class Calendar extends React.Component {
       prevList: [],
       curList: [],
       nextList: [],
+      weekIdx: 0,
       defaultIdx: 1,
-      count: 0
+      count: 0,
+      calendarType: 'month'
     };
 
   }
@@ -23,20 +26,22 @@ class Calendar extends React.Component {
     this.syncTime();
   }
 
-  syncTime = (selectedYear, selectedMonth) => {
+  syncTime = (selectedYear, selectedMonth, selectedDate) => {
     const today = new Date();
     let year = today.getFullYear();
     let month = today.getMonth();
-    const date = today.getDate();
+    let date = today.getDate();
     let curTime = `${year}${month}${date}`;
     if (selectedYear) {
       year = selectedYear;
       month = selectedMonth;
+      date = selectedDate;
       curTime = this.state.selectedTime;
     }
     this.setState({
       selectedYear: year,
       selectedMonth: month,
+      selectedDate: date,
       selectedTime: curTime
     }, () => {
       this.getDateList('cur', year, month);
@@ -51,6 +56,83 @@ class Calendar extends React.Component {
         this.getDateList('next', year, month+1);
       }
     });
+  }
+
+  lastWeek = lastDay => {
+    let {selectedYear, selectedMonth} = this.state;
+    let date = lastDay - 7;
+    if (lastDay-7 < 1) {
+      selectedMonth--;
+      if (selectedMonth < 0) {
+        selectedYear--;
+        selectedMonth = 11;
+      }
+      const days = this.getDays(selectedYear, selectedMonth);
+      date = lastDay-7+days;
+    }
+    this.getWeekList('prev', selectedYear, selectedMonth, date, 6);
+  }
+
+  nextWeek = lastDay => {
+    let {selectedYear, selectedMonth} = this.state;
+    const days = this.getDays(selectedYear, selectedMonth);
+    let date = lastDay + 7;
+    if (lastDay + 7 > days) {
+      selectedMonth++;
+      if (selectedMonth > 11) {
+        selectedYear++;
+        selectedMonth = 1;
+      }
+      date = lastDay+7-days;
+    }
+    this.getWeekList('next', selectedYear, selectedMonth, date, 6);
+  }
+
+  syncWeek = (selectedYear, selectedMonth, selectedDate) => {
+    const today = new Date(selectedYear, selectedMonth, selectedDate);
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const date = today.getDate();
+    // 判断第一天是星期几(返回[0-6]中的一个，0代表星期天，1代表星期一，以此类推)
+    const dayOfWeek = today.getDay();
+    const lastDay = this.getWeekList('cur', year, month, date, dayOfWeek);
+    this.lastWeek(lastDay);
+    this.nextWeek(lastDay);
+  }
+
+  getWeekList = (pos, year, month, date, dayOfWeek) => {
+    // 获取当前月的天数
+    const curDays = this.getDays(year, month);
+    const weekList = [];
+    let lastDays;
+    // 获取前一个月的天数
+    if (month === 0) {
+      lastDays = this.getDays(year-1, 11);
+    } else {
+      lastDays = this.getDays(year, month-1);
+    }
+    let posDay;
+    for (let i=0; i< 7; i++) { // 包含指定时间的区间段（周日到周六）
+      const diff = i-dayOfWeek;
+      if (diff < 0) { // 指定日期非周日，补全周日到指定日期的时间
+        if (date+diff < 1) {
+          posDay = lastDays+date+diff;
+        } else {
+          posDay = date+diff;
+        }
+      } else { // 指定日期之后的时间自动增加
+        if (date+diff > curDays) {
+          posDay = date+diff-curDays;
+        } else {
+          posDay = date+diff;
+        }
+      }
+      weekList.push(posDay);
+    }
+    this.setState({
+      [`${pos}List`]: weekList
+    });
+    return posDay;
   }
 
   isLeap = year => {
@@ -98,7 +180,8 @@ class Calendar extends React.Component {
     });
   }
 
-  handleSwipe = idx => {
+  handleSwipeMonth = idx => {
+    const {selectedDate} = this.state;
     let {selectedYear, selectedMonth} = this.state;
     const {defaultIdx, count} = this.state;
     if (idx < defaultIdx) {
@@ -116,23 +199,87 @@ class Calendar extends React.Component {
         selectedMonth = selectedMonth + 1;
       }
     }
-    this.syncTime(selectedYear, selectedMonth);
+    this.syncTime(selectedYear, selectedMonth, selectedDate);
     this.setState({
       count: count+1
     });
   }
 
-  selectTime = selectedTime => {
+  handleSwipeWeek = (idx, lastDay) => {
+    let {selectedYear, selectedMonth} = this.state;
+    const {defaultIdx, count} = this.state;
+    let date;
+    if (idx < defaultIdx) {
+      date = lastDay - 7;
+      if (lastDay-7 < 1) {
+        selectedMonth--;
+        if (selectedMonth < 0) {
+          selectedYear--;
+          selectedMonth = 11;
+        }
+        const days = this.getDays(selectedYear, selectedMonth);
+        date = lastDay-7+days;
+      }
+    } else if (idx > defaultIdx) {
+      const days = this.getDays(selectedYear, selectedMonth);
+      date = lastDay + 7;
+      if (lastDay + 7 > days) {
+        selectedMonth++;
+        if (selectedMonth > 11) {
+          selectedYear++;
+          selectedMonth = 1;
+        }
+        date = lastDay+7-days;
+      }
+    }
+    this.syncWeek(selectedYear, selectedMonth, date, 6);
     this.setState({
-      selectedTime
+      selectedYear,
+      selectedMonth,
+      count: count+1
     });
   }
-  render() {
+
+  handleSwipe = (idx, lastDay) => {
+    const {calendarType} = this.state;
+    if (calendarType === 'month') {
+      this.handleSwipeMonth(idx);
+    } else {
+      this.handleSwipeWeek(idx, lastDay);
+    }
+  }
+
+  selectTime = date => {
     const {selectedYear, selectedMonth} = this.state;
+    this.setState({
+      selectedDate: date,
+      selectedTime: `${selectedYear}${selectedMonth}${date}`
+    });
+  }
+  switch = () => {
+    const {selectedYear, selectedMonth, selectedDate} = this.state;
+    let {calendarType} = this.state;
+    if (calendarType === 'month') {
+      calendarType = 'week';
+      this.setState({
+        calendarType,
+      });
+      this.syncWeek(selectedYear, selectedMonth, selectedDate);
+    } else {
+      calendarType = 'month';
+      this.setState({
+        calendarType
+      });
+      this.syncTime(selectedYear, selectedMonth);
+    }
+  }
+  render() {
+    const {selectedYear, selectedMonth, calendarType} = this.state;
     return (
       <div className={styles.container}>
         <div className={styles.title}>{selectedYear}年{selectedMonth+1}月
-          <div className={styles.switch}></div></div>
+          <div className={styles.switch} onClick={this.switch}></div>
+        </div>
         <div className="weekday">
           <div className="date">日</div>
           <div className="date">一</div>
@@ -142,11 +289,21 @@ class Calendar extends React.Component {
           <div className="date">五</div>
           <div className="date">六</div>
         </div>
-        <MonthCalendar
-          handleSwipe={this.handleSwipe}
-          selectTime={this.selectTime}
-          {...this.state}
-        />
+        {
+          calendarType === 'month' ? (
+            <MonthCalendar
+              handleSwipe={this.handleSwipe}
+              selectTime={this.selectTime}
+              {...this.state}
+            />
+          ) : (
+            <WeekCalendar
+              handleSwipe={this.handleSwipe}
+              selectTime={this.selectTime}
+              {...this.state}
+            />
+          )
+        }
       </div>
     );
   }
