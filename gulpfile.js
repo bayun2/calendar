@@ -63,7 +63,7 @@ gulp.task('dev', cb => {
   };
   wpConfig.externals = {
     react: 'React',
-    'react-demo': 'ReactDOM'
+    'react-dom': 'ReactDOM'
   };
   Object.keys(wpConfig.entry).forEach(k => wpConfig.entry[k].unshift(
     'react-hot-loader/patch',
@@ -75,6 +75,7 @@ gulp.task('dev', cb => {
     new webpack.NamedModulesPlugin()
   );
   const compiler = webpack(wpConfig);
+  console.log(wpConfig)
   app.use(require('webpack-dev-middleware')(compiler, {
     noInfo: true,
     publicPath: wpConfig.output.publicPath

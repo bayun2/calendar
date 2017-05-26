@@ -18,7 +18,7 @@ module.exports = {
   },
   externals:webpackUMDExternal({
     react: 'React',
-    'react-demo': 'ReactDOM',
+    'react-dom': 'ReactDOM',
     'prop-types': 'PropTypes',
     'react-css-modules': 'cssModules'
   }),

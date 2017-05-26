@@ -52,9 +52,10 @@
     "webpack-umd-external": "^1.0.2"
   },
   "dependencies": {
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
     "prop-types": "^15.5.9",
-    "react-css-modules": "^4.0.5"
+    "react": "^15.5.4",
+    "react-css-modules": "^4.0.5",
+    "react-dom": "^15.5.4",
+    "react-swipe": "^5.0.8"
   }
 }

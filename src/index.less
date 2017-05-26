@@ -1,9 +1,46 @@
-.fdt-react-demo {
-  background: yellow;
+.container {
   .title {
-    color: red;
+    width: 100%;
+    height: 40px;
+    background-color: #f6f6f6;
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+    color: #666;
+    position: relative;
+    .switch {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: url(https://static.tigerbrokers.com/finance-calendar/static/images/switch-icon.4deca2b7.png) 50% no-repeat;
+      background-size: 20px;
+      top: 0;
+      right: 0;
+    }
   }
-  .content {
-    color: blue;
+}
+:global .swipeWraper {
+  position: relative;
+  overflow: hidden;
+  visibility: visible;
+}
+:global .panelWrap, :global .weekday {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+:global .date {
+  display: block;
+  overflow: hidden;
+  width: 14%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  &.notcur {
+    color: #ccc;
+  }
+  &.active {
+    background-color: #ff5637;
+    color: #fff;
   }
 }
