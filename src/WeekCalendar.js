@@ -5,15 +5,46 @@ import PropTypes from 'prop-types';
 class WeekCalendar extends React.Component {
   handleSwipe = idx => {
     const {curList} = this.props;
-    const lastDay = curList[curList.length-1];
+    const lastDay = curList[curList.length-1].val;
     this.props.handleSwipe(idx, lastDay);
   }
-  selectTime = time => {
-    this.props.selectTime(time);
+  selectTime = (type, date, direction) => {
+    this.props.selectTime(type, Number(date), direction);
+  }
+  renderCurItem = (item, idx) => {
+    const {selectedYear, selectedMonth, selectedTime} = this.props;
+    let year = selectedYear;
+    let month = selectedMonth;
+    if (item.type === 'prev') {
+      if (month === 0) {
+        month = 11;
+        year--;
+      } else {
+        month--;
+      }
+    } else if (item.type === 'next') {
+      if (month === 11) {
+        month = 1;
+        year++;
+      } else {
+        month++;
+      }
+    }
+    const curTime = `${year}/${month}/${item.val}`;
+    return (
+      <div
+        className={`date
+          ${(curTime === selectedTime) ?
+           'active' : ''}`}
+        key={idx}
+        onClick={this.selectTime.bind(this, 'week', item.val, item.type)}
+      >
+        <div>{item.val}</div>
+      </div>
+    );
   }
   render() {
-    const {prevList, curList, nextList,
-      selectedYear, selectedMonth, selectedTime, defaultIdx, count} = this.props;
+    const {prevList, curList, nextList, defaultIdx, count} = this.props;
     return (
       <div className="swipeWraper">
         <ReactSwipe
@@ -31,7 +62,7 @@ class WeekCalendar extends React.Component {
                   className="date"
                   key={idx}
                 >
-                  <div>{item}</div>
+                  <div>{item.val}</div>
                 </div>
               ))
             }
@@ -39,15 +70,7 @@ class WeekCalendar extends React.Component {
           <div className="panelWrap">
             {
               curList.map((item, idx) => (
-                <div
-                  className={`date
-                    ${(`${selectedYear}${selectedMonth}${item}` === selectedTime) ?
-                     'active' : ''}`}
-                  key={idx}
-                  onClick={this.selectTime.bind(this, `${selectedYear}${selectedMonth}${item}`)}
-                >
-                  <div>{item}</div>
-                </div>
+                this.renderCurItem(item, idx)
               ))
             }
           </div>
@@ -58,7 +81,7 @@ class WeekCalendar extends React.Component {
                   className="date"
                   key={idx}
                 >
-                  <div>{item}</div>
+                  <div>{item.val}</div>
                 </div>
               ))
             }
