@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactSwipe from 'react-swipe';
 import PropTypes from 'prop-types';
+import calcTime from './helper/calcTime';
 
 class MonthCalendar extends React.Component {
   handleSwipe = idx => {
@@ -10,9 +11,40 @@ class MonthCalendar extends React.Component {
     if (!isCur) return false;
     this.props.selectTimeFunc(type, time);
   }
+  renderOtherItem = (type, item, idx) => {
+    const {selectedTime} = this.props;
+    const curTime = `${item.year}/${item.month}/${item.val}`;
+    return (
+      <div
+        className={`date
+         ${item.type === 'cur' ? '' : 'notcur'}
+          ${(curTime === selectedTime) ?
+           'active' : ''}`}
+        key={idx}
+      >
+        <div>{item.val}</div>
+      </div>
+    );
+  }
+  renderCurItem = (item, idx) => {
+    const {selectedYear, selectedMonth, selectedTime} = this.props;
+    const calcedTimeObj = calcTime(item.type, selectedYear, selectedMonth);
+    return (
+      <div
+        className={`date
+         ${item.type === 'cur' ? '' : 'notcur'}
+          ${(`${calcedTimeObj.year}/${calcedTimeObj.month}/${item.val}` === selectedTime) ?
+           'active' : ''}`}
+        key={idx}
+        onClick={this.selectTimeFunc.bind(this, item.type === 'cur', 'month',
+        `${selectedYear}/${selectedMonth}/${item.val}`)}
+      >
+        <div>{item.val}</div>
+      </div>
+    );
+  }
   render() {
-    const {prevList, curList, nextList,
-      selectedYear, selectedMonth, selectedTime, defaultIdx, count} = this.props;
+    const {prevList, curList, nextList, defaultIdx, count} = this.props;
     return (
       <div className="swipeWraper">
         <ReactSwipe
@@ -26,42 +58,21 @@ class MonthCalendar extends React.Component {
           <div className="panelWrap">
             {
               prevList.map((item, idx) => (
-                <div
-                  className={`date ${item.type === 'cur' ? '' : 'notcur'}`}
-                  key={idx}
-                >
-                  <div>{item.val}</div>
-                </div>
+                this.renderOtherItem('prev', item, idx)
               ))
             }
           </div>
           <div className="panelWrap">
             {
               curList.map((item, idx) => (
-                <div
-                  className={`date
-                   ${item.type === 'cur' ? '' : 'notcur'}
-                    ${((`${selectedYear}/${selectedMonth}/${item.val}` === selectedTime) &&
-                     (item.type === 'cur')) ?
-                     'active' : ''}`}
-                  key={idx}
-                  onClick={this.selectTimeFunc.bind(this, item.type === 'cur', 'month',
-                  `${selectedYear}/${selectedMonth}/${item.val}`)}
-                >
-                  <div>{item.val}</div>
-                </div>
+                this.renderCurItem(item, idx)
               ))
             }
           </div>
           <div className="panelWrap">
             {
               nextList.map((item, idx) => (
-                <div
-                  className={`date ${item.type === 'cur' ? '' : 'notcur'}`}
-                  key={idx}
-                >
-                  <div>{item.val}</div>
-                </div>
+                this.renderOtherItem('next', item, idx)
               ))
             }
           </div>

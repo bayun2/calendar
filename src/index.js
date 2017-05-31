@@ -1,8 +1,9 @@
-import styles from './index.less';
+import './index.less';
 import React from 'react';
 import PropTypes from 'prop-types';
 import MonthCalendar from './MonthCalendar';
 import WeekCalendar from './WeekCalendar';
+import calcTime from './helper/calcTime';
 
 class Calendar extends React.Component {
   constructor(props) {
@@ -43,7 +44,12 @@ class Calendar extends React.Component {
     const year = today.getFullYear();
     const month = today.getMonth();
     const date = today.getDate();
-    this.syncTime(year, month, date);
+    const calendarType = this.props.type ? this.props.type : this.state.calendarType;
+    if (calendarType === 'week') {
+      this.syncWeek(year, month, date);
+    } else if (calendarType === 'month') {
+      this.syncTime(year, month, date);
+    }
   }
 
   syncTime = (year, month, date) => {
@@ -60,6 +66,7 @@ class Calendar extends React.Component {
       selectedDate: date,
       selectedTime: curTime,
       switchTime,
+      calendarType: 'month',
       count: this.state.count+1
     }, () => {
       this.getDateList('cur', year, month);
@@ -102,7 +109,9 @@ class Calendar extends React.Component {
     const curDays = this.getDays(year, month);
     const prevDays = month === 0 ? this.getDays(year-1, 11) : this.getDays(year, month-1);
     // 计算会有几行
-    const colNums = Math.ceil((dayOfWeek + curDays)/7);
+    // const colNums = Math.ceil((dayOfWeek + curDays)/7);
+    // 因为滚动时前一个月和后一月补完不足部分后，行数可能会不同，所以取最大值6
+    const colNums = 6;
     const list = [];
     for(let i=0; i<colNums; i++) {
       for(let k=0; k<7; k++) {
@@ -110,12 +119,14 @@ class Calendar extends React.Component {
         let val = idx - dayOfWeek + 1;
         if (val <= 0) { // 上个月日期补足一开始不满一周部分
           val = prevDays + val;
-          list.push({type:'prev', val});
+          const calcedTimeObj = calcTime('prev', year, month);
+          list.push({type:'prev', val, year: calcedTimeObj.year, month: calcedTimeObj.month});
         } else if (val > curDays) { // 下个月日期补足最后不满一周部分
           val = val - curDays;
-          list.push({type:'next', val});
+          const calcedTimeObj = calcTime('next', year, month);
+          list.push({type:'next', val, year: calcedTimeObj.year, month: calcedTimeObj.month});
         } else {
-          list.push({type:'cur', val});
+          list.push({type:'cur', val, year, month});
         }
       }
     }
@@ -124,8 +135,11 @@ class Calendar extends React.Component {
     });
   }
 
-  lastWeek = lastDay => {
-    let {selectedYear, selectedMonth} = this.state;
+  lastWeek = lastTime => {
+    const lastTimeArr = lastTime.split('/');
+    let selectedYear = Number(lastTimeArr[0]);
+    let selectedMonth = Number(lastTimeArr[1]);
+    const  lastDay = Number(lastTimeArr[2]);
     let date = lastDay - 7;
     if (lastDay-7 < 1) {
       selectedMonth--;
@@ -142,8 +156,11 @@ class Calendar extends React.Component {
     });
   }
 
-  nextWeek = lastDay => {
-    let {selectedYear, selectedMonth} = this.state;
+  nextWeek = lastTime => {
+    const lastTimeArr = lastTime.split('/');
+    let selectedYear = Number(lastTimeArr[0]);
+    let selectedMonth = Number(lastTimeArr[1]);
+    const  lastDay = Number(lastTimeArr[2]);
     const days = this.getDays(selectedYear, selectedMonth);
     let date = lastDay + 7;
     if (lastDay + 7 > days) {
@@ -160,21 +177,32 @@ class Calendar extends React.Component {
     });
   }
 
-  syncWeek = (selectedYear, selectedMonth, selectedDate) => {
+  syncWeek = (year, month, date) => {
+    const isInit = this.state.count === 0;
+    let curTime = `${year}/${month}/${date}`;
+    let switchTime = `${year}/${month}/${date}`;
+    if (!isInit) {
+      switchTime = this.state.switchTime;
+      curTime = this.state.selectedTime;
+    }
     this.setState({
-      selectedYear,
-      selectedMonth,
-      selectedDate,
+      selectedYear: year,
+      selectedMonth: month,
+      selectedDate: date,
+      selectedTime: curTime,
+      switchTime,
       calendarType: 'week',
       count: this.state.count+1
     }, () => {
-      const weekList = this.getWeekList(selectedYear, selectedMonth, selectedDate);
+      const weekList = this.getWeekList(year, month, date);
       this.setState({
         curList: weekList
       });
+      const calcedTimeObj = calcTime(weekList[weekList.length-1].type, year, month);
       const lastDay = weekList[weekList.length-1].val;
-      this.lastWeek(lastDay);
-      this.nextWeek(lastDay);
+      const lastTime = `${calcedTimeObj.year}/${calcedTimeObj.month}/${lastDay}`;
+      this.lastWeek(lastTime);
+      this.nextWeek(lastTime);
     });
   }
 
@@ -198,18 +226,30 @@ class Calendar extends React.Component {
       if (diff < 0) { // 指定日期非周日，补全周日到指定日期的时间
         if (date+diff < 1) {
           posDay = lastDays+date+diff;
-          weekList.push({type:'prev', val: posDay});
+          const calcedTimeObj = calcTime('prev', year, month);
+          weekList.push({
+            type:'prev',
+            val: posDay,
+            year: calcedTimeObj.year,
+            month: calcedTimeObj.month
+          });
         } else {
           posDay = date+diff;
-          weekList.push({type:'cur', val: posDay});
+          weekList.push({type:'cur', val: posDay, year, month});
         }
       } else { // 指定日期之后的时间自动增加
         if (date+diff > curDays) {
           posDay = date+diff-curDays;
-          weekList.push({type:'next', val: posDay});
+          const calcedTimeObj = calcTime('next', year, month);
+          weekList.push({
+            type:'next',
+            val: posDay,
+            year: calcedTimeObj.year,
+            month: calcedTimeObj.month
+          });
         } else {
           posDay = date+diff;
-          weekList.push({type:'cur', val: posDay});
+          weekList.push({type:'cur', val: posDay, year, month});
         }
       }
     }
@@ -397,9 +437,9 @@ class Calendar extends React.Component {
   render() {
     const {selectedYear, selectedMonth, calendarType} = this.state;
     return (
-      <div className={styles.container}>
-        <div className={styles.title}>{selectedYear}年{selectedMonth+1}月
-          <div className={styles.switch} onClick={this.switch}></div>
+      <div className="calendar-container">
+        <div className="title">{selectedYear}年{selectedMonth+1}月
+          <div className="switch" onClick={this.switch}></div>
         </div>
         <div className="weekday">
           <div className="date">日</div>
@@ -437,6 +477,7 @@ Calendar.defaultProps = {
 Calendar.propTypes = {
   curTime: PropTypes.string,
   selectTimeCb: PropTypes.func,
+  type: PropTypes.string
 };
 
 export default Calendar;

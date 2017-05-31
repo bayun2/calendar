@@ -1,35 +1,14 @@
 import React from 'react';
 import ReactSwipe from 'react-swipe';
 import PropTypes from 'prop-types';
+import calcTime from './helper/calcTime';
 
 class WeekCalendar extends React.Component {
-  calcTime = (type, year, month) => {
-    let realYear = year;
-    let realMonth = month;
-    if (type === 'prev') {
-      if (month === 0) {
-        realMonth = 11;
-        realYear--;
-      } else {
-        realMonth--;
-      }
-    } else if (type === 'next') {
-      if (month === 11) {
-        realMonth = 1;
-        realYear++;
-      } else {
-        realMonth++;
-      }
-    }
-    return {
-      year: realYear,
-      month: realMonth
-    };
-  }
+
   handleSwipe = idx => {
     const {curList, selectedYear, selectedMonth} = this.props;
     const lastDay = curList[curList.length-1].val;
-    const calcedTimeObj = this.calcTime(curList[curList.length-1].type,
+    const calcedTimeObj = calcTime(curList[curList.length-1].type,
        selectedYear, selectedMonth);
     const year = calcedTimeObj.year;
     const month = calcedTimeObj.month;
@@ -38,11 +17,25 @@ class WeekCalendar extends React.Component {
   selectTimeFunc = (type, time) => {
     this.props.selectTimeFunc(type, time);
   }
+  renderOtherItem = (item, idx) => {
+    const {selectedTime} = this.props;
+    const curTime = `${item.year}/${item.month}/${item.val}`;
+    return (
+      <div
+        className={`date
+          ${(curTime === selectedTime) ?
+           'active' : ''}`}
+        key={idx}
+      >
+        <div>{item.val}</div>
+      </div>
+    );
+  }
   renderCurItem = (item, idx) => {
     const {selectedYear, selectedMonth, selectedTime} = this.props;
     let year = selectedYear;
     let month = selectedMonth;
-    const calcedTimeObj = this.calcTime(item.type, year, month);
+    const calcedTimeObj = calcTime(item.type, year, month);
     year = calcedTimeObj.year;
     month = calcedTimeObj.month;
     const curTime = `${year}/${month}/${item.val}`;
@@ -73,12 +66,7 @@ class WeekCalendar extends React.Component {
           <div className="panelWrap">
             {
               prevList.map((item, idx) => (
-                <div
-                  className="date"
-                  key={idx}
-                >
-                  <div>{item.val}</div>
-                </div>
+                this.renderOtherItem(item, idx)
               ))
             }
           </div>
@@ -92,12 +80,7 @@ class WeekCalendar extends React.Component {
           <div className="panelWrap">
             {
               nextList.map((item, idx) => (
-                <div
-                  className="date"
-                  key={idx}
-                >
-                  <div>{item.val}</div>
-                </div>
+                this.renderOtherItem(item, idx)
               ))
             }
           </div>
