@@ -7,7 +7,8 @@ document.body.appendChild(rootEl);
 
 if (module.hot) {
   import('react-hot-loader').then(({AppContainer}) => {
-    const render = () => ReactDOM.render(<AppContainer><Calendar /></AppContainer>, rootEl);
+    const render = () => ReactDOM.render(<AppContainer>
+      <Calendar selectTimeCb={time => console.log(time)}/></AppContainer>, rootEl);
     render();
     module.hot.accept('../src/index.js', render);
   });

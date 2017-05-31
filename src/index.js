@@ -1,5 +1,6 @@
 import styles from './index.less';
 import React from 'react';
+import PropTypes from 'prop-types';
 import MonthCalendar from './MonthCalendar';
 import WeekCalendar from './WeekCalendar';
 
@@ -310,6 +311,7 @@ class Calendar extends React.Component {
       } else {
         this.syncWeek(selectedYear, selectedMonth, date);
       }
+      this.props.selectTimeCb && this.props.selectTimeCb(selectedTime);
     });
   }
   isInRange = (year, month, date) => {
@@ -426,7 +428,7 @@ Calendar.defaultProps = {
 };
 
 Calendar.propTypes = {
-
+  selectTimeCb: PropTypes.func,
 };
 
 export default Calendar;
