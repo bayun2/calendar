@@ -17,7 +17,7 @@ ReactDOM.render(<Calendar />, rootEl);
 
 ```
 
-## props
+## Props
 + curTime: ?String -'2017/4/21' 中间的月份:0~11，如前面指定的传入，其实是指定5月份
 + selectTimeCb: ?Func 选择时间以后的回调函数，会一个time(如：'2017/4/21') 中间的月份:0~11，例子中的4其实选中的是5月
 + type: ?String -'month' | 'week' 默认以月历展示还是周历
