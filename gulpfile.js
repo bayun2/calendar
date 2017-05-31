@@ -34,12 +34,16 @@ gulp.task('checkVersion', cb => {
   }
 });
 
-gulp.task('demo', ['clean'],() => {
+gulp.task('docs', () => {
   wpConfig.devtool = 'source-map';
   wpConfig.entry = {
     demo: [
-      './demo/index.js'
+      './docs/index.js'
     ]
+  };
+  wpConfig.output = {
+    path: path.join(__dirname, 'docs'),
+    filename: '[name].js'
   };
   wpConfig.externals = {
     react: 'React',
@@ -54,7 +58,7 @@ gulp.task('demo', ['clean'],() => {
   );
   return gulp.src('./src/**/*.js')
     .pipe(gulpWebpack(wpConfig, webpack))
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('docs'));
 });
 
 gulp.task('build', ['clean'],() => {
@@ -74,11 +78,6 @@ gulp.task('build', ['clean'],() => {
 gulp.task('dev', cb => {
   const app = express();
   wpConfig.devtool = 'eval';
-  wpConfig.entry = {
-    index: [
-      './demo/demo.js'
-    ]
-  };
   wpConfig.output = {
     path: path.join(__dirname, 'demo'),
     filename: '[name].js',
