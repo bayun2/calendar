@@ -33,20 +33,24 @@ class Calendar extends React.Component {
   }
 
   componentDidMount() {
-    this.syncTime();
+    let today;
+    if (this.props.curTime) {
+      const curTimeArr = this.props.curTime.split('/');
+      today = new Date(Number(curTimeArr[0]), Number(curTimeArr[1]), Number(curTimeArr[2]));
+    } else {
+      today = new Date();
+    }
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const date = today.getDate();
+    this.syncTime(year, month, date);
   }
 
-  syncTime = (selectedYear, selectedMonth, selectedDate) => {
-    const today = new Date();
-    let year = today.getFullYear();
-    let month = today.getMonth();
-    let date = today.getDate();
+  syncTime = (year, month, date) => {
+    const isInit = this.state.count === 0;
     let curTime = `${year}/${month}/${date}`;
     let switchTime = `${year}/${month}/${date}`;
-    if (selectedYear) {
-      year = selectedYear;
-      month = selectedMonth;
-      date = selectedDate;
+    if (!isInit) {
       switchTime = this.state.switchTime;
       curTime = this.state.selectedTime;
     }
@@ -68,6 +72,9 @@ class Calendar extends React.Component {
         this.getDateList('next', year+1, 0);
       } else {
         this.getDateList('next', year, month+1);
+      }
+      if (isInit) {
+        this.props.selectTimeCb && this.props.selectTimeCb(curTime);
       }
     });
   }
@@ -428,6 +435,7 @@ Calendar.defaultProps = {
 };
 
 Calendar.propTypes = {
+  curTime: PropTypes.string,
   selectTimeCb: PropTypes.func,
 };
 
