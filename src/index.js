@@ -6,7 +6,16 @@ import WeekCalendar from './WeekCalendar';
 class Calendar extends React.Component {
   constructor(props) {
     super(props);
-
+    /**
+     * selectedYear： 当前面板所在年份
+     * selectedMonth： 当前面板所在月份（从0~11）
+     * selectedTime：真正被选中的时间（面板切花，如果没有选择时间，则该值不会变化）第一次为初始指定时间，如果不传，就是today
+     * switchTime：如果有选择时间，优先记录选择的时间，另外切换周面板以后，记录当前周面版最后一天的时间
+     * 用来记录当前月已经切换到第几周了
+     * defaultIdx: 默认显示swipe区域的索引（0：是前一页，2是后一页，一共渲染三页）
+     * count： 用于辅助swipe做重新渲染，识别为新的内容，逻辑上只做简单的累加
+     * calendarType: 'month|week' 月历或者周历
+     */
     this.state = {
       selectedYear: 2017,
       selectedMonth: 4,
@@ -15,7 +24,6 @@ class Calendar extends React.Component {
       prevList: [],
       curList: [],
       nextList: [],
-      weekIdx: 0,
       defaultIdx: 1,
       count: 0,
       calendarType: 'month'
@@ -60,6 +68,51 @@ class Calendar extends React.Component {
       } else {
         this.getDateList('next', year, month+1);
       }
+    });
+  }
+
+  isLeap = year => {
+    if (year % 4 === 0 && year % 100 !== 0) {
+      return 1;
+    } else if (year % 400 === 0) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  getDays = (year, month) => {
+    const daysPerMonth = [31, 28+this.isLeap(year), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    return daysPerMonth[month];
+  }
+
+  getDateList = (pos, year, month) => {
+    // 获取当月的第一天
+    const firstDay = new Date(year, month, 1);
+    // 判断第一天是星期几(返回[0-6]中的一个，0代表星期天，1代表星期一，以此类推)
+    const dayOfWeek = firstDay.getDay();
+    const curDays = this.getDays(year, month);
+    const prevDays = month === 0 ? this.getDays(year-1, 11) : this.getDays(year, month-1);
+    // 计算会有几行
+    const colNums = Math.ceil((dayOfWeek + curDays)/7);
+    const list = [];
+    for(let i=0; i<colNums; i++) {
+      for(let k=0; k<7; k++) {
+        const idx = 7 * i +k;
+        let val = idx - dayOfWeek + 1;
+        if (val <= 0) { // 上个月日期补足一开始不满一周部分
+          val = prevDays + val;
+          list.push({type:'prev', val});
+        } else if (val > curDays) { // 下个月日期补足最后不满一周部分
+          val = val - curDays;
+          list.push({type:'next', val});
+        } else {
+          list.push({type:'cur', val});
+        }
+      }
+    }
+    this.setState({
+      [`${pos}List`]: list
     });
   }
 
@@ -155,51 +208,6 @@ class Calendar extends React.Component {
     return weekList;
   }
 
-  isLeap = year => {
-    if (year % 4 === 0 && year % 100 !== 0) {
-      return 1;
-    } else if (year % 400 === 0) {
-      return 1;
-    } else {
-      return 0;
-    }
-  }
-
-  getDays = (year, month) => {
-    const daysPerMonth = [31, 28+this.isLeap(year), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    return daysPerMonth[month];
-  }
-
-  getDateList = (pos, year, month) => {
-    // 获取当月的第一天
-    const firstDay = new Date(year, month, 1);
-    // 判断第一天是星期几(返回[0-6]中的一个，0代表星期天，1代表星期一，以此类推)
-    const dayOfWeek = firstDay.getDay();
-    const curDays = this.getDays(year, month);
-    const prevDays = month === 0 ? this.getDays(year-1, 11) : this.getDays(year, month-1);
-    // 计算会有几行
-    const colNums = Math.ceil((dayOfWeek + curDays)/7);
-    const list = [];
-    for(let i=0; i<colNums; i++) {
-      for(let k=0; k<7; k++) {
-        const idx = 7 * i +k;
-        let val = idx - dayOfWeek + 1;
-        if (val <= 0) { // 上个月日期补足一开始不满一周部分
-          val = prevDays + val;
-          list.push({type:'prev', val});
-        } else if (val > curDays) { // 下个月日期补足最后不满一周部分
-          val = val - curDays;
-          list.push({type:'next', val});
-        } else {
-          list.push({type:'cur', val});
-        }
-      }
-    }
-    this.setState({
-      [`${pos}List`]: list
-    });
-  }
-
   handleSwipeMonth = idx => {
     let {selectedYear, selectedMonth} = this.state;
     const {defaultIdx, count, switchTime} = this.state;
@@ -231,48 +239,38 @@ class Calendar extends React.Component {
     });
   }
 
-  handleSwipeWeek = (idx, lastDay) => {
-    const {switchTime, selectedTime} = this.state;
-    let {selectedYear, selectedMonth} = this.state;
+  handleSwipeWeek = (idx, lastTime) => {
+    let selectedYear, selectedMonth;
     const {defaultIdx} = this.state;
-    const switchTimeArr = switchTime.split('/');
+    const lastTimeArr = lastTime.split('/');
+    const lastTimeDate = Number(lastTimeArr[2]);
+    const lastTimeMonth = Number(lastTimeArr[1]);
+    const lastTimeYear = Number(lastTimeArr[0]);
+    selectedYear = lastTimeYear;
+    selectedMonth = lastTimeMonth;
     let date;
     if (idx === defaultIdx) return false;
     if (idx < defaultIdx) {
-      date = lastDay - 7;
-      // 或者从月历切换到周历时，如果当前选择时间是月与月的交汇处，
-      // 通过判断[选择|切换]日期是否大于当前周六（一组最后一位）日期，来判断月份是否要减少
-      if (switchTimeArr[2] > lastDay) {
-        const days = this.getDays(selectedYear, selectedMonth);
-        date = lastDay-7+days;
-      } else if (lastDay-7 < 1) { // 连续右滑判断是否进入上个月
+      date = lastTimeDate - 7;
+      if (lastTimeDate-7 < 1) { // 连续右滑判断是否进入上个月
         selectedMonth--;
         if (selectedMonth < 0) {
           selectedYear--;
           selectedMonth = 11;
         }
         const days = this.getDays(selectedYear, selectedMonth);
-        date = lastDay-7+days;
+        date = lastTimeDate-7+days;
       }
-
     } else if (idx > defaultIdx) {
       const days = this.getDays(selectedYear, selectedMonth);
-      date = lastDay + 7;
-      // 或者从月历切换到周历时，如果当前选择时间是月与月的交汇处，
-      // 通过判断[选择|切换]日期是否大于当前周六（一组最后一位）日期，来判断月份是否要增加
-      if (switchTimeArr[2] > lastDay) {
+      date = lastTimeDate + 7;
+      if (lastTimeDate + 7 > days) { // 连续右滑判断是否进入下个月
         selectedMonth++;
         if (selectedMonth > 11) {
           selectedYear++;
           selectedMonth = 1;
         }
-      } else if (lastDay + 7 > days) { // 连续右滑判断是否进入下个月
-        selectedMonth++;
-        if (selectedMonth > 11) {
-          selectedYear++;
-          selectedMonth = 1;
-        }
-        date = lastDay+7-days;
+        date = lastTimeDate+7-days;
       }
     }
     const isInRangeObj = this.isInRange(selectedYear, selectedMonth, date);
@@ -281,6 +279,7 @@ class Calendar extends React.Component {
       selectedMonth = isInRangeObj.selectedMonth;
       date = isInRangeObj.date;
     }
+    // 如果新面板范围内包含选中时间，按选中时间渲染，否则按新面板内最后一天（周六）渲染
     this.setState({
       switchTime: `${selectedYear}/${selectedMonth}/${date}`
     }, () => {
@@ -288,35 +287,23 @@ class Calendar extends React.Component {
     });
   }
 
-  handleSwipe = (idx, lastDay) => {
+  handleSwipe = (idx, lastTime) => {
     const {calendarType} = this.state;
     if (calendarType === 'month') {
       this.handleSwipeMonth(idx);
     } else {
-      this.handleSwipeWeek(idx, lastDay);
+      this.handleSwipeWeek(idx, lastTime);
     }
   }
 
-  selectTime = (type, date, direction) => {
-    let {selectedYear, selectedMonth} = this.state;
-    if (direction === 'prev') {
-      if (selectedMonth === 0) {
-        selectedMonth = 11;
-        selectedYear--;
-      } else {
-        selectedMonth--;
-      }
-    } else if (direction === 'next') {
-      if (selectedMonth === 11) {
-        selectedMonth = 1;
-        selectedYear++;
-      } else {
-        selectedMonth++;
-      }
-    }
+  selectTimeFunc = (type, selectedTime) => {
+    const selectedTimeArr = selectedTime.split('/');
+    const selectedYear = Number(selectedTimeArr[0]);
+    const selectedMonth = Number(selectedTimeArr[1]);
+    const date = Number(selectedTimeArr[2]);
     this.setState({
-      selectedTime: `${selectedYear}/${selectedMonth}/${date}`,
-      switchTime: `${selectedYear}/${selectedMonth}/${date}`
+      selectedTime,
+      switchTime: selectedTime
     }, () => {
       if (type === 'month') {
         this.syncTime(selectedYear, selectedMonth, date);
@@ -418,13 +405,13 @@ class Calendar extends React.Component {
           calendarType === 'month' ? (
             <MonthCalendar
               handleSwipe={this.handleSwipe}
-              selectTime={this.selectTime}
+              selectTimeFunc={this.selectTimeFunc}
               {...this.state}
             />
           ) : (
             <WeekCalendar
               handleSwipe={this.handleSwipe}
-              selectTime={this.selectTime}
+              selectTimeFunc={this.selectTimeFunc}
               {...this.state}
             />
           )

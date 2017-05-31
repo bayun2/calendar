@@ -3,33 +3,48 @@ import ReactSwipe from 'react-swipe';
 import PropTypes from 'prop-types';
 
 class WeekCalendar extends React.Component {
-  handleSwipe = idx => {
-    const {curList} = this.props;
-    const lastDay = curList[curList.length-1].val;
-    this.props.handleSwipe(idx, lastDay);
+  calcTime = (type, year, month) => {
+    let realYear = year;
+    let realMonth = month;
+    if (type === 'prev') {
+      if (month === 0) {
+        realMonth = 11;
+        realYear--;
+      } else {
+        realMonth--;
+      }
+    } else if (type === 'next') {
+      if (month === 11) {
+        realMonth = 1;
+        realYear++;
+      } else {
+        realMonth++;
+      }
+    }
+    return {
+      year: realYear,
+      month: realMonth
+    };
   }
-  selectTime = (type, date, direction) => {
-    this.props.selectTime(type, Number(date), direction);
+  handleSwipe = idx => {
+    const {curList, selectedYear, selectedMonth} = this.props;
+    const lastDay = curList[curList.length-1].val;
+    const calcedTimeObj = this.calcTime(curList[curList.length-1].type,
+       selectedYear, selectedMonth);
+    const year = calcedTimeObj.year;
+    const month = calcedTimeObj.month;
+    this.props.handleSwipe(idx, `${year}/${month}/${lastDay}`);
+  }
+  selectTimeFunc = (type, time) => {
+    this.props.selectTimeFunc(type, time);
   }
   renderCurItem = (item, idx) => {
     const {selectedYear, selectedMonth, selectedTime} = this.props;
     let year = selectedYear;
     let month = selectedMonth;
-    if (item.type === 'prev') {
-      if (month === 0) {
-        month = 11;
-        year--;
-      } else {
-        month--;
-      }
-    } else if (item.type === 'next') {
-      if (month === 11) {
-        month = 1;
-        year++;
-      } else {
-        month++;
-      }
-    }
+    const calcedTimeObj = this.calcTime(item.type, year, month);
+    year = calcedTimeObj.year;
+    month = calcedTimeObj.month;
     const curTime = `${year}/${month}/${item.val}`;
     return (
       <div
@@ -37,7 +52,7 @@ class WeekCalendar extends React.Component {
           ${(curTime === selectedTime) ?
            'active' : ''}`}
         key={idx}
-        onClick={this.selectTime.bind(this, 'week', item.val, item.type)}
+        onClick={this.selectTimeFunc.bind(this, 'week', curTime)}
       >
         <div>{item.val}</div>
       </div>
@@ -106,7 +121,7 @@ WeekCalendar.propTypes = {
   handleSwipe: PropTypes.func,
   nextList: PropTypes.array,
   prevList: PropTypes.array,
-  selectTime: PropTypes.func,
+  selectTimeFunc: PropTypes.func,
   selectedMonth: PropTypes.number,
   selectedTime: PropTypes.string,
   selectedYear: PropTypes.number,

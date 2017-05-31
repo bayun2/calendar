@@ -6,9 +6,9 @@ class MonthCalendar extends React.Component {
   handleSwipe = idx => {
     this.props.handleSwipe(idx);
   }
-  selectTime = (isCur, type, date) => {
+  selectTimeFunc = (isCur, type, time) => {
     if (!isCur) return false;
-    this.props.selectTime(type, Number(date));
+    this.props.selectTimeFunc(type, time);
   }
   render() {
     const {prevList, curList, nextList,
@@ -45,7 +45,8 @@ class MonthCalendar extends React.Component {
                      (item.type === 'cur')) ?
                      'active' : ''}`}
                   key={idx}
-                  onClick={this.selectTime.bind(this, item.type === 'cur', 'month', item.val)}
+                  onClick={this.selectTimeFunc.bind(this, item.type === 'cur', 'month',
+                  `${selectedYear}/${selectedMonth}/${item.val}`)}
                 >
                   <div>{item.val}</div>
                 </div>
@@ -84,7 +85,7 @@ MonthCalendar.propTypes = {
   handleSwipe: PropTypes.func,
   nextList: PropTypes.array,
   prevList: PropTypes.array,
-  selectTime: PropTypes.func,
+  selectTimeFunc: PropTypes.func,
   selectedMonth: PropTypes.number,
   selectedTime: PropTypes.string,
   selectedYear: PropTypes.number,
