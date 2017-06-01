@@ -78,6 +78,11 @@ gulp.task('build', ['clean'],() => {
 gulp.task('dev', cb => {
   const app = express();
   wpConfig.devtool = 'eval';
+  wpConfig.entry = {
+    index: [
+      './demo/demo.js'
+    ]
+  };
   wpConfig.output = {
     path: path.join(__dirname, 'demo'),
     filename: '[name].js',

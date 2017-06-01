@@ -24,15 +24,10 @@
   overflow: hidden;
   visibility: visible;
 }
-:global .panelWrap, :global .weekday {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
-}
 :global .date {
-  display: block;
+  display: inline-block;
   overflow: hidden;
-  width: 14%;
+  width: 14.28%;
   height: 40px;
   line-height: 40px;
   text-align: center;
@@ -43,4 +38,9 @@
     background-color: #ff5637;
     color: #fff;
   }
+}
+
+:global .panelWrap, :global .weekday {
+  display: block;
+  text-align: center;
 }
