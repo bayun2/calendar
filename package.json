@@ -1,13 +1,17 @@
 {
   "name": "fdt-calendar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "...",
-  "author": "Your Github name",
+  "author": "bayun2",
   "engines": {
     "node": ">=6.0.0"
   },
   "publishConfig": {
     "registry": "http://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:bayun2/calendar.git"
   },
   "scripts": {
     "dev": "sudo NODE_ENV=development gulp dev",

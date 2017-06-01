@@ -1,8 +1,26 @@
 # calendar
 
+[![NPM version][npm-image]][npm-url]
+[![npm download][download-image]][download-url]
+
+[npm-image]: http://img.shields.io/npm/v/rc-calendar.svg?style=flat-square
+[npm-url]: http://npmjs.org/package/rc-calendar
+[download-image]: https://img.shields.io/npm/dm/fdt-calendar.svg?style=flat-square
+[download-url]: https://npmjs.org/package/fdt-calendar
+
+## Screenshots
+
+<img src="http://img.investmaster.cn/fdt_hz/other_html/Screenshots1.png" width="288"/>
+
+<img src="http://img.investmaster.cn/fdt_hz/other_html/Screenshots2.png" width="288"/>
+
 ## Demo
 
 https://bayun2.github.io/calendar/docs/
+
+## install
+
+[![fdt-calendar](https://nodei.co/npm/fdt-calendar.png)](https://npmjs.org/package/fdt-calendar)
 
 ## Example
 
