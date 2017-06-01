@@ -4,6 +4,14 @@ import PropTypes from 'prop-types';
 import calcTime from './helper/calcTime';
 
 class MonthCalendar extends React.Component {
+  constructor(props) {
+    super(props);
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const date = today.getDate();
+    this.today = `${year}/${month}/${date}`;
+  }
   handleSwipe = idx => {
     this.props.handleSwipe(idx);
   }
@@ -19,7 +27,7 @@ class MonthCalendar extends React.Component {
         className={`date
          ${item.type === 'cur' ? '' : 'notcur'}
           ${(curTime === selectedTime) ?
-           'active' : ''}`}
+           'active' : ''} ${this.today === curTime ? 'today' : ''}`}
         key={idx}
       >
         <div>{item.val}</div>
@@ -29,12 +37,13 @@ class MonthCalendar extends React.Component {
   renderCurItem = (item, idx) => {
     const {selectedYear, selectedMonth, selectedTime} = this.props;
     const calcedTimeObj = calcTime(item.type, selectedYear, selectedMonth);
+    const curTime = `${calcedTimeObj.year}/${calcedTimeObj.month}/${item.val}`;
     return (
       <div
         className={`date
          ${item.type === 'cur' ? '' : 'notcur'}
-          ${(`${calcedTimeObj.year}/${calcedTimeObj.month}/${item.val}` === selectedTime) ?
-           'active' : ''}`}
+          ${(curTime === selectedTime) ?
+           'active' : ''} ${this.today === curTime ? 'today' : ''}`}
         key={idx}
         onClick={this.selectTimeFunc.bind(this, item.type === 'cur', 'month',
         `${selectedYear}/${selectedMonth}/${item.val}`)}

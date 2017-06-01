@@ -4,7 +4,14 @@ import PropTypes from 'prop-types';
 import calcTime from './helper/calcTime';
 
 class WeekCalendar extends React.Component {
-
+  constructor(props) {
+    super(props);
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const date = today.getDate();
+    this.today = `${year}/${month}/${date}`;
+  }
   handleSwipe = idx => {
     const {curList, selectedYear, selectedMonth} = this.props;
     const lastDay = curList[curList.length-1].val;
@@ -24,7 +31,8 @@ class WeekCalendar extends React.Component {
       <div
         className={`date
           ${(curTime === selectedTime) ?
-           'active' : ''}`}
+           'active' : ''}
+           ${this.today === curTime ? 'today' : ''}`}
         key={idx}
       >
         <div>{item.val}</div>
@@ -43,7 +51,8 @@ class WeekCalendar extends React.Component {
       <div
         className={`date
           ${(curTime === selectedTime) ?
-           'active' : ''}`}
+           'active' : ''}
+           ${this.today === curTime ? 'today' : ''}`}
         key={idx}
         onClick={this.selectTimeFunc.bind(this, 'week', curTime)}
       >
