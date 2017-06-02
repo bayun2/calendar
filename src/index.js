@@ -203,6 +203,9 @@ class Calendar extends React.Component {
       const lastTime = `${calcedTimeObj.year}/${calcedTimeObj.month}/${lastDay}`;
       this.lastWeek(lastTime);
       this.nextWeek(lastTime);
+      if (isInit) {
+        this.props.selectTimeCb && this.props.selectTimeCb(curTime);
+      }
     });
   }
 
