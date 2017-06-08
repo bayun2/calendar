@@ -1,0 +1,303 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MonthCalendar is normal render 1`] = `
+"<div class=\\"calendar-container\\"><div class=\\"title\\"><!-- react-text: 3 -->2017<!-- /react-text --><!-- react-text: 4 -->年<!-- /react-text --><!-- react-text: 5 -->4<!-- /react-text --><!-- react-text: 6 -->月<!-- /react-text --><div class=\\"switch\\"></div></div><div class=\\"weekday\\"><div class=\\"date\\">日</div><div class=\\"date\\">一</div><div class=\\"date\\">二</div><div class=\\"date\\">三</div><div class=\\"date\\">四</div><div class=\\"date\\">五</div><div class=\\"date\\">六</div></div><div class=\\"swipeWraper\\"><div class=\\"react-swipe-container \\" style=\\"overflow: hidden; visibility: visible; position: relative;\\"><div style=\\"overflow: hidden; position: relative; width: 0px; left: 0px;\\"><div class=\\"panelWrap\\" style=\\"float: left; width: 0px; position: relative;\\" data-index=\\"0\\"><div class=\\"date
+         notcur
+           \\"><div>26</div></div><div class=\\"date
+         notcur
+           \\"><div>27</div></div><div class=\\"date
+         notcur
+           \\"><div>28</div></div><div class=\\"date
+         
+           \\"><div>1</div></div><div class=\\"date
+         
+           \\"><div>2</div></div><div class=\\"date
+         
+           \\"><div>3</div></div><div class=\\"date
+         
+           \\"><div>4</div></div><div class=\\"date
+         
+           \\"><div>5</div></div><div class=\\"date
+         
+           \\"><div>6</div></div><div class=\\"date
+         
+           \\"><div>7</div></div><div class=\\"date
+         
+           \\"><div>8</div></div><div class=\\"date
+         
+           \\"><div>9</div></div><div class=\\"date
+         
+           \\"><div>10</div></div><div class=\\"date
+         
+           \\"><div>11</div></div><div class=\\"date
+         
+           \\"><div>12</div></div><div class=\\"date
+         
+           \\"><div>13</div></div><div class=\\"date
+         
+           \\"><div>14</div></div><div class=\\"date
+         
+           \\"><div>15</div></div><div class=\\"date
+         
+           \\"><div>16</div></div><div class=\\"date
+         
+           \\"><div>17</div></div><div class=\\"date
+         
+           \\"><div>18</div></div><div class=\\"date
+         
+           \\"><div>19</div></div><div class=\\"date
+         
+           \\"><div>20</div></div><div class=\\"date
+         
+           \\"><div>21</div></div><div class=\\"date
+         
+           \\"><div>22</div></div><div class=\\"date
+         
+           \\"><div>23</div></div><div class=\\"date
+         
+           \\"><div>24</div></div><div class=\\"date
+         
+           \\"><div>25</div></div><div class=\\"date
+         
+           \\"><div>26</div></div><div class=\\"date
+         
+           \\"><div>27</div></div><div class=\\"date
+         
+           \\"><div>28</div></div><div class=\\"date
+         
+           \\"><div>29</div></div><div class=\\"date
+         
+           \\"><div>30</div></div><div class=\\"date
+         
+           \\"><div>31</div></div><div class=\\"date
+         notcur
+           \\"><div>1</div></div><div class=\\"date
+         notcur
+           \\"><div>2</div></div><div class=\\"date
+         notcur
+           \\"><div>3</div></div><div class=\\"date
+         notcur
+           \\"><div>4</div></div><div class=\\"date
+         notcur
+           \\"><div>5</div></div><div class=\\"date
+         notcur
+           \\"><div>6</div></div><div class=\\"date
+         notcur
+           \\"><div>7</div></div><div class=\\"date
+         notcur
+           \\"><div>8</div></div></div><div class=\\"panelWrap\\" style=\\"float: left; width: 0px; position: relative;\\" data-index=\\"1\\"><div class=\\"date
+         notcur
+           \\"><div>26</div></div><div class=\\"date
+         notcur
+           \\"><div>27</div></div><div class=\\"date
+         notcur
+           \\"><div>28</div></div><div class=\\"date
+         notcur
+           \\"><div>29</div></div><div class=\\"date
+         notcur
+           \\"><div>30</div></div><div class=\\"date
+         notcur
+           \\"><div>31</div></div><div class=\\"date
+         
+           \\"><div>1</div></div><div class=\\"date
+         
+           \\"><div>2</div></div><div class=\\"date
+         
+           \\"><div>3</div></div><div class=\\"date
+         
+           \\"><div>4</div></div><div class=\\"date
+         
+           \\"><div>5</div></div><div class=\\"date
+         
+           \\"><div>6</div></div><div class=\\"date
+         
+           \\"><div>7</div></div><div class=\\"date
+         
+           \\"><div>8</div></div><div class=\\"date
+         
+           \\"><div>9</div></div><div class=\\"date
+         
+           \\"><div>10</div></div><div class=\\"date
+         
+           \\"><div>11</div></div><div class=\\"date
+         
+           \\"><div>12</div></div><div class=\\"date
+         
+           \\"><div>13</div></div><div class=\\"date
+         
+           \\"><div>14</div></div><div class=\\"date
+         
+           \\"><div>15</div></div><div class=\\"date
+         
+           \\"><div>16</div></div><div class=\\"date
+         
+           \\"><div>17</div></div><div class=\\"date
+         
+           \\"><div>18</div></div><div class=\\"date
+         
+           \\"><div>19</div></div><div class=\\"date
+         
+           \\"><div>20</div></div><div class=\\"date
+         
+          active \\"><div>21</div></div><div class=\\"date
+         
+           \\"><div>22</div></div><div class=\\"date
+         
+           \\"><div>23</div></div><div class=\\"date
+         
+           \\"><div>24</div></div><div class=\\"date
+         
+           \\"><div>25</div></div><div class=\\"date
+         
+           \\"><div>26</div></div><div class=\\"date
+         
+           \\"><div>27</div></div><div class=\\"date
+         
+           \\"><div>28</div></div><div class=\\"date
+         
+           \\"><div>29</div></div><div class=\\"date
+         
+           \\"><div>30</div></div><div class=\\"date
+         notcur
+           \\"><div>1</div></div><div class=\\"date
+         notcur
+           \\"><div>2</div></div><div class=\\"date
+         notcur
+           \\"><div>3</div></div><div class=\\"date
+         notcur
+           \\"><div>4</div></div><div class=\\"date
+         notcur
+           \\"><div>5</div></div><div class=\\"date
+         notcur
+           \\"><div>6</div></div></div><div class=\\"panelWrap\\" style=\\"float: left; width: 0px; position: relative;\\" data-index=\\"2\\"><div class=\\"date
+         notcur
+           \\"><div>30</div></div><div class=\\"date
+         
+           \\"><div>1</div></div><div class=\\"date
+         
+           \\"><div>2</div></div><div class=\\"date
+         
+           \\"><div>3</div></div><div class=\\"date
+         
+           \\"><div>4</div></div><div class=\\"date
+         
+           \\"><div>5</div></div><div class=\\"date
+         
+           \\"><div>6</div></div><div class=\\"date
+         
+           \\"><div>7</div></div><div class=\\"date
+         
+           \\"><div>8</div></div><div class=\\"date
+         
+           \\"><div>9</div></div><div class=\\"date
+         
+           \\"><div>10</div></div><div class=\\"date
+         
+           \\"><div>11</div></div><div class=\\"date
+         
+           \\"><div>12</div></div><div class=\\"date
+         
+           \\"><div>13</div></div><div class=\\"date
+         
+           \\"><div>14</div></div><div class=\\"date
+         
+           \\"><div>15</div></div><div class=\\"date
+         
+           \\"><div>16</div></div><div class=\\"date
+         
+           \\"><div>17</div></div><div class=\\"date
+         
+           \\"><div>18</div></div><div class=\\"date
+         
+           \\"><div>19</div></div><div class=\\"date
+         
+           \\"><div>20</div></div><div class=\\"date
+         
+           \\"><div>21</div></div><div class=\\"date
+         
+           \\"><div>22</div></div><div class=\\"date
+         
+           \\"><div>23</div></div><div class=\\"date
+         
+           \\"><div>24</div></div><div class=\\"date
+         
+           \\"><div>25</div></div><div class=\\"date
+         
+           \\"><div>26</div></div><div class=\\"date
+         
+           \\"><div>27</div></div><div class=\\"date
+         
+           \\"><div>28</div></div><div class=\\"date
+         
+           \\"><div>29</div></div><div class=\\"date
+         
+           \\"><div>30</div></div><div class=\\"date
+         
+           \\"><div>31</div></div><div class=\\"date
+         notcur
+           \\"><div>1</div></div><div class=\\"date
+         notcur
+           \\"><div>2</div></div><div class=\\"date
+         notcur
+           \\"><div>3</div></div><div class=\\"date
+         notcur
+           \\"><div>4</div></div><div class=\\"date
+         notcur
+           \\"><div>5</div></div><div class=\\"date
+         notcur
+           \\"><div>6</div></div><div class=\\"date
+         notcur
+           \\"><div>7</div></div><div class=\\"date
+         notcur
+           today\\"><div>8</div></div><div class=\\"date
+         notcur
+           \\"><div>9</div></div><div class=\\"date
+         notcur
+           \\"><div>10</div></div></div></div></div></div></div>"
+`;
+
+exports[`WeekCalendar is normal render 1`] = `
+"<div class=\\"calendar-container\\"><div class=\\"title\\"><!-- react-text: 3 -->2017<!-- /react-text --><!-- react-text: 4 -->年<!-- /react-text --><!-- react-text: 5 -->4<!-- /react-text --><!-- react-text: 6 -->月<!-- /react-text --><div class=\\"switch\\"></div></div><div class=\\"weekday\\"><div class=\\"date\\">日</div><div class=\\"date\\">一</div><div class=\\"date\\">二</div><div class=\\"date\\">三</div><div class=\\"date\\">四</div><div class=\\"date\\">五</div><div class=\\"date\\">六</div></div><div class=\\"swipeWraper\\"><div class=\\"react-swipe-container \\" style=\\"overflow: hidden; visibility: visible; position: relative;\\"><div style=\\"overflow: hidden; position: relative; width: 0px; left: 0px;\\"><div class=\\"panelWrap\\" style=\\"float: left; width: 0px; position: relative;\\" data-index=\\"0\\"><div class=\\"date
+          
+           \\"><div>9</div></div><div class=\\"date
+          
+           \\"><div>10</div></div><div class=\\"date
+          
+           \\"><div>11</div></div><div class=\\"date
+          
+           \\"><div>12</div></div><div class=\\"date
+          
+           \\"><div>13</div></div><div class=\\"date
+          
+           \\"><div>14</div></div><div class=\\"date
+          
+           \\"><div>15</div></div></div><div class=\\"panelWrap\\" style=\\"float: left; width: 0px; position: relative;\\" data-index=\\"1\\"><div class=\\"date
+          
+           \\"><div>16</div></div><div class=\\"date
+          
+           \\"><div>17</div></div><div class=\\"date
+          
+           \\"><div>18</div></div><div class=\\"date
+          
+           \\"><div>19</div></div><div class=\\"date
+          
+           \\"><div>20</div></div><div class=\\"date
+          active
+           \\"><div>21</div></div><div class=\\"date
+          
+           \\"><div>22</div></div></div><div class=\\"panelWrap\\" style=\\"float: left; width: 0px; position: relative;\\" data-index=\\"2\\"><div class=\\"date
+          
+           \\"><div>23</div></div><div class=\\"date
+          
+           \\"><div>24</div></div><div class=\\"date
+          
+           \\"><div>25</div></div><div class=\\"date
+          
+           \\"><div>26</div></div><div class=\\"date
+          
+           \\"><div>27</div></div><div class=\\"date
+          
+           \\"><div>28</div></div><div class=\\"date
+          
+           \\"><div>29</div></div></div></div></div></div></div>"
+`;

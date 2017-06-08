@@ -10,7 +10,7 @@ const calcTime = (type, year, month) => {
     }
   } else if (type === 'next') {
     if (month === 11) {
-      realMonth = 1;
+      realMonth = 0;
       realYear++;
     } else {
       realMonth++;
